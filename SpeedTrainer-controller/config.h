@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 #define EEPROM_CHECK_STRING "EEPROM001"
-#define CURRENT_FIRMWARE_VERSION 1
+#define CURRENT_FIRMWARE_VERSION 2
 
 /* Change to your screen resolution */
 #define SCREEN_WIDTH 320
