@@ -17,7 +17,7 @@
 #define OTA_PASSWORD "SpeedTrainer"
 #define OTA_HOSTNAME "SpeedTrainerController"
 
-#define BUFFER_SIZE 150
+#define BUFFER_SIZE 300
 
 #define ERROR_VALUE -1
 
