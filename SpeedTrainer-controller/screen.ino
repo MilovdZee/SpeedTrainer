@@ -91,7 +91,10 @@ void show_status_label(const char *statusText, boolean add_close_btn) {
 }
 
 void hide_status_label() {
-  lv_msgbox_close(status_label);
+  if (status_label != NULL) {
+    lv_msgbox_close(status_label);
+    status_label = NULL;
+  }
 }
 
 lv_obj_t *get_screen_main() {

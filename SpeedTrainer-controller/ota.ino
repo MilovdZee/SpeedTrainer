@@ -2,6 +2,8 @@ static lv_obj_t* ota_progress_meter;
 lv_meter_indicator_t* ota_progress_indicator;
 
 static void ota_start() {
+  hide_status_label();
+
   digitalWrite(RGB_RED_PIN, LOW);
 
   lv_obj_t* main = get_screen_main();

@@ -1,7 +1,7 @@
 #define UPDATE_HOST "raw.githubusercontent.com"
 #define UPDATE_PORT 443
 #define VERSION_FILE_LOCATION "/MilovdZee/SpeedTrainer/main/firmware/controller_version.txt"
-#define FIRMWARE_FILE_LOCATION "/MilovdZee/SpeedTrainer/main/firmware/SpeedTrainerController.ino-%d.bin"
+#define FIRMWARE_FILE_LOCATION "/MilovdZee/SpeedTrainer/main/firmware/SpeedTrainer-controller.ino-%d.bin"
 
 #define CONNECTION_TIMEOUT 5000
 
@@ -122,7 +122,6 @@ void update_firmware(int version) {
       bool can_begin = Update.begin(content_length);
       if (can_begin) {
         Serial.printf("Begin OTA of %ld bytes...\n", content_length);
-        hide_status_label();
         ota_start();
         Update.onProgress(ota_on_progress);
 
@@ -153,6 +152,8 @@ void update_firmware(int version) {
       client.flush();
     }
   }
+
+  show_status_label("Update failed!", true);
 
   // stop the connection
   client.stop();
