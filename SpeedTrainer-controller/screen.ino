@@ -3,15 +3,15 @@ static lv_color_t buf[SCREEN_WIDTH * 10];
 
 lv_obj_t *screen_main;
 
-static lv_obj_t *keyboard;
+static lv_obj_t *keyboard = nullptr;
 
-lv_obj_t *status_label;
+lv_obj_t *status_label = nullptr;
 
 void setup_screen() {
   tft.begin();
   tft.setRotation(1);
 
-  SettingsClass settings = get_settings();
+  Settings settings = get_settings();
   tft.setBrightness(settings.brightness * 240 / 100 + 15);
 
   // Initialize lvgl library
@@ -76,7 +76,7 @@ void set_small_style() {
 }
 
 void show_status_label(const char *statusText, boolean add_close_btn) {
-  char *title_text = NULL;
+  char *title_text = nullptr;
   if (add_close_btn) title_text = "#ff0000 Alert#";
   status_label = lv_msgbox_create(NULL, title_text, statusText, NULL, add_close_btn);
   lv_obj_center(status_label);
@@ -91,9 +91,9 @@ void show_status_label(const char *statusText, boolean add_close_btn) {
 }
 
 void hide_status_label() {
-  if (status_label != NULL) {
+  if (status_label != nullptr) {
     lv_msgbox_close(status_label);
-    status_label = NULL;
+    status_label = nullptr;
   }
 }
 
@@ -113,7 +113,7 @@ static void ta_event_cb(lv_event_t *event) {
     lv_keyboard_set_textarea(keyboard, ta);
   } else if (code == LV_EVENT_READY || code == LV_EVENT_CANCEL) {
     lv_obj_del(keyboard);
-    keyboard = NULL;
+    keyboard = nullptr;
   }
 }
 

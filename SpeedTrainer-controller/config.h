@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define SERIAL_BUFFER_SIZE 1000
+
 #define EEPROM_CHECK_STRING "EEPROM001"
 #define CURRENT_FIRMWARE_VERSION 2
 
@@ -14,37 +16,34 @@
 #define RGB_GREEN_PIN 16
 #define RGB_BLUE_PIN 17
 
+#define HOSTNAME "SPDTRNRCTRLR"
+
 #define OTA_PASSWORD "SpeedTrainer"
 #define OTA_HOSTNAME "SpeedTrainerController"
 
-#define BUFFER_SIZE 300
-
+#define BUFFER_SIZE 500
 #define ERROR_VALUE -1
+
+#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
 // NTP server
 const char *ntpServer = "pool.ntp.org";
 char *timezone = "CET-1CEST,M3.5.0,M10.5.0/3";
 char *timezone_text = "Amsterdam";
 
-class SettingsClass {
+class Settings {
 public:
   char eeprom_check[10];
   char ssid[60];
   char wifi_password[60];
   int brightness;
 
-  SettingsClass() {
-    eeprom_check[0] = 0;
+  Settings() {
+    strncpy(this->eeprom_check, EEPROM_CHECK_STRING, sizeof(this->eeprom_check));
     ssid[0] = 0;
     wifi_password[0] = 0;
     brightness = 50;
-  };
-
-  SettingsClass(const char *ssid, const char *wifi_password, int brightness) {
-    strncpy(this->eeprom_check, EEPROM_CHECK_STRING, sizeof(this->eeprom_check));
-    strncpy(this->ssid, ssid, sizeof(this->ssid));
-    strncpy(this->wifi_password, wifi_password, sizeof(this->wifi_password));
-    this->brightness = brightness;
   };
 };
 

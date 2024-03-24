@@ -6,7 +6,8 @@
 #include <ArduinoOTA.h>
 #include <Update.h>
 #include "esp_sntp.h"
-
+#include <BLEDevice.h>
+#include <BLEServer.h>
 #include "lgfx_ESP32_2432S028.h"
 #include "config.h"
 
@@ -16,6 +17,7 @@ static lv_style_t style_small;
 
 void setup() {
   Serial.begin(115200);
+  Serial.setTxBufferSize(SERIAL_BUFFER_SIZE);
   Serial.println("Setup started");
 
   // Switch off the RGB LED
@@ -26,12 +28,11 @@ void setup() {
   digitalWrite(RGB_BLUE_PIN, HIGH);
   pinMode(RGB_BLUE_PIN, OUTPUT);
 
-  read_settings();
-
+  bool validSettings = read_settings();
   setup_screen();
   setup_touch();
-
-  if (check_validity(get_settings())) {
+  //setup_ble();
+  if (validSettings) {
     setup_wifi();
     setup_ota();
     setup_ntp();
@@ -41,6 +42,7 @@ void setup() {
     show_status_label("Not configured", true);
     setup_window(false);
   }
+
   Serial.println("Setup finished");
 
   if (WiFi.status() == WL_CONNECTED) {
@@ -59,15 +61,20 @@ void setup() {
   }
 }
 
+uint8_t value = 0;
 void loop() {
-  ArduinoOTA.handle();
-  lv_timer_handler_run_in_period(5);
+  digitalWrite(RGB_BLUE_PIN, LOW);
+  notify(value++);
+  delay_for_millis(50);
+  digitalWrite(RGB_BLUE_PIN, HIGH);
+
+  delay_for_millis(3000);
 }
 
 void delay_for_millis(int delay) {
   unsigned long start = millis();
   while (millis() - start < delay) {
-    lv_timer_handler_run_in_period(5);
     ArduinoOTA.handle();
+    lv_timer_handler_run_in_period(5);
   }
 }

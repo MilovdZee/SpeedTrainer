@@ -1,5 +1,5 @@
 void setup_wifi() {
-  SettingsClass settings = get_settings();
+  Settings settings = get_settings();
   if (settings.ssid[0] == 0) return;
 
   int bufSize = 128;

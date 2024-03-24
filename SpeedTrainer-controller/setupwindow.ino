@@ -69,7 +69,8 @@ static void setup_window_content_event_handler(lv_event_t *event) {
         Serial.println("WHITE");
         break;
       default:
-        Serial.println("Unknown");    }
+        Serial.println("Unknown");
+    }
   }
 }
 
@@ -85,18 +86,18 @@ void setup_window(boolean show_close_button) {
     lv_obj_add_event_cb(btn, setup_window_header_event_handler, LV_EVENT_CLICKED, NULL);
   }
 
-  SettingsClass settings = get_settings();
+  Settings settings = get_settings();
 
   ssid_input = input_line(setup_win, "SSID: ", 0, settings.ssid);
   wifi_password_input = input_line(setup_win, "Password: ", 40, settings.wifi_password);
   brightness_input = input_slider(setup_win, "Brightness: ", 90, settings.brightness);
 
-  button(setup_win, "R", BUTTON_WIDTH, BUTTON_HIGHT, -2.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
-  button(setup_win, "R", BUTTON_WIDTH, BUTTON_HIGHT, -1.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
+  button(setup_win, "R1", BUTTON_WIDTH, BUTTON_HIGHT, -2.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
+  button(setup_win, "R2", BUTTON_WIDTH, BUTTON_HIGHT, -1.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
   button(setup_win, "G", BUTTON_WIDTH, BUTTON_HIGHT, -0.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
-  button(setup_win, "B", BUTTON_WIDTH, BUTTON_HIGHT,  0.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
-  button(setup_win, "Y", BUTTON_WIDTH, BUTTON_HIGHT,  1.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
-  button(setup_win, "W", BUTTON_WIDTH, BUTTON_HIGHT,  2.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
+  button(setup_win, "B", BUTTON_WIDTH, BUTTON_HIGHT, 0.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
+  button(setup_win, "Y", BUTTON_WIDTH, BUTTON_HIGHT, 1.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
+  button(setup_win, "W", BUTTON_WIDTH, BUTTON_HIGHT, 2.5 * (BUTTON_WIDTH + BUTTON_SPACING), 120, setup_window_content_event_handler);
 
   char buffer[BUFFER_SIZE];
   snprintf(buffer, BUFFER_SIZE, "Firmware version: %d, MilovdZee", CURRENT_FIRMWARE_VERSION);
@@ -104,15 +105,15 @@ void setup_window(boolean show_close_button) {
 }
 
 void save_settings() {
-  const char *ssid = lv_textarea_get_text(ssid_input);
-  const char *wifi_password = lv_textarea_get_text(wifi_password_input);
-  int brightness = lv_slider_get_value(brightness_input);
+  Settings settings = get_settings();
+  snprintf(settings.ssid, sizeof(settings.ssid), lv_textarea_get_text(ssid_input));
+  snprintf(settings.wifi_password, sizeof(settings.wifi_password), lv_textarea_get_text(wifi_password_input));
+  settings.brightness = lv_slider_get_value(brightness_input);
 
   Serial.println("Settings:");
-  Serial.printf("  - ssid                 : '%s'\n", ssid);
-  Serial.printf("  - wifi_password        : '%s'\n", wifi_password);
-  Serial.printf("  - brightness           : '%d'\n", brightness);
+  Serial.printf("  - ssid                 : '%s'\n", settings.ssid);
+  Serial.printf("  - wifi_password        : '%s'\n", settings.wifi_password);
+  Serial.printf("  - brightness           : '%d'\n", settings.brightness);
 
-  SettingsClass settings = SettingsClass(ssid, wifi_password, brightness);
   write_settings(settings);
 }

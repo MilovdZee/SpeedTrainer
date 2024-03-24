@@ -1,36 +1,39 @@
 Preferences preferences;
+
 Settings settings;
 
-bool read_settings() {
+void read_settings() {
   // For the ESP the flash has to be read to a buffer
   preferences.begin(HOSTNAME, false);
 
-  int settingsSize = preferences.getBytesLength("settings");
-  Serial.printf("'settings' data structure has size: %d\n", settingsSize);
+  int settings_size = preferences.getBytesLength("settings");
+  Serial.printf("'settings' data structure has size: %d\n", settings_size);
 
   if (!preferences.getBytes("settings", &settings, sizeof(settings))) {
     Serial.println("ERROR: Failed to read preferences from EEPROM!");
-    return false;
+    return;
   }
 
   Serial.printf("settings.eeprom_check: '%s'\n", settings.eeprom_check);
-  bool valid = check_validity(settings);
-  if (valid) {
+  if (check_validity(settings)) {
     Serial.println("EEPROM data found");
   } else {
     Serial.println("EEPROM data NOT found");
     settings = Settings();
   }
   show_settings(settings);
-  return valid;
 }
 
 void write_settings(Settings newSettings) {
   preferences.begin(HOSTNAME, false);
-  if (!preferences.putBytes("settings", &newSettings, sizeof(newSettings))) {
+  int written = preferences.putBytes("settings", &newSettings, sizeof(newSettings));
+  if (!written) {
     Serial.println("ERROR: Failed to write preferences to EEPROM!");
     return;
+  } else {
+    Serial.printf("Written %d bytes to EEPROM\n", written);
   }
+  show_settings(newSettings);
   settings = newSettings;
 }
 
